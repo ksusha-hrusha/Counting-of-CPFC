@@ -1,0 +1,60 @@
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 820710
+      POSTGRES_DB: nutricale
+    volumes:
+      - pgdata:/var/lib/postgresql
+    ports:
+      - "5433:5432"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://postgres:820710@db:5432/nutricale
+      JWT_SECRET_KEY: nutricale-secret-2026
+      LIBRETRANSLATE_URL: https://libretranslate.com
+      LIBRETRANSLATE_API_KEY: ""
+    volumes:
+      - ./backend/uploads:/app/uploads
+    ports:
+      - "5052:5000"
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/api/products/')\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:5267:80"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  pgdata:
