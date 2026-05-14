@@ -6,6 +6,7 @@
       <!-- Desktop nav -->
       <nav class="nav desktop-nav">
         <RouterLink to="/calculator">Калькулятор</RouterLink>
+        <RouterLink v-if="auth.isLoggedIn" to="/diary">Дневник</RouterLink>
         <RouterLink to="/feed">Лента</RouterLink>
         <RouterLink to="/catalog">Каталог</RouterLink>
         <RouterLink v-if="auth.isLoggedIn" to="/profile">Профиль</RouterLink>
@@ -43,6 +44,7 @@
       <nav class="mobile-nav">
         <RouterLink to="/" @click="menuOpen = false">Главная</RouterLink>
         <RouterLink to="/calculator" @click="menuOpen = false">Калькулятор</RouterLink>
+        <RouterLink v-if="auth.isLoggedIn" to="/diary" @click="menuOpen = false">Дневник</RouterLink>
         <RouterLink to="/feed" @click="menuOpen = false">Лента</RouterLink>
         <RouterLink to="/catalog" @click="menuOpen = false">Каталог</RouterLink>
         <RouterLink v-if="auth.isLoggedIn" to="/profile" @click="menuOpen = false">Профиль</RouterLink>

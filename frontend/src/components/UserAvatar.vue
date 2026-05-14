@@ -1,6 +1,6 @@
 <template>
   <div class="avatar-wrap" :style="{ width: size + 'px', height: size + 'px' }">
-    <img v-if="src" :src="src" class="avatar-img" :alt="username" @error="onError" />
+    <img v-if="src && !failed" :src="src" class="avatar-img" :alt="username" @error="onError" />
     <div v-else class="avatar-initials" :style="{ fontSize: size * 0.35 + 'px' }">
       {{ initials }}
     </div>

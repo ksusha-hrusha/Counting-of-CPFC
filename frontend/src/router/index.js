@@ -7,6 +7,7 @@ const routes = [
   { path: '/calculator', component: () => import('@/views/CalculatorView.vue') },
   { path: '/dishes/new', component: () => import('@/views/DishFormView.vue'), meta: { auth: true } },
   { path: '/dishes/:id/edit', component: () => import('@/views/DishFormView.vue'), meta: { auth: true } },
+  { path: '/diary', component: () => import('@/views/DiaryView.vue'), meta: { auth: true } },
   { path: '/profile', component: () => import('@/views/ProfileView.vue'), meta: { auth: true } },
   { path: '/catalog', component: () => import('@/views/CatalogView.vue') },
   { path: '/feed', component: () => import('@/views/FeedView.vue') },

@@ -8,9 +8,12 @@ SMTP_PORT = 587
 MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
 MAIL_PASSWORD = os.getenv("MAIL_PASSWORD", "")
 MAIL_FROM = os.getenv("MAIL_FROM", MAIL_USERNAME)
+FRONTEND_URL = os.getenv("FRONTEND_URL", "https://nutricalc.silaeder.space")
 
 
-def send_reset_email(to_email: str, reset_token: str, base_url: str = "http://localhost:5173"):
+def send_reset_email(to_email: str, reset_token: str, base_url: str = None):
+    if base_url is None:
+        base_url = FRONTEND_URL
     reset_link = f"{base_url}/reset-password?token={reset_token}"
 
     msg = MIMEMultipart("alternative")

@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Environment
+.env
+*.env
+!.env.example
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# OpenCode / agents
+opencode.json
+.opencode/
+.claude/
+
+# Logs / temp
+*.log
+.tmp/
+
+# uploaded user content
+backend/uploads/

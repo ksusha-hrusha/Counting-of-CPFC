@@ -1,6 +1,6 @@
 import uuid
 from app import db
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date
 
 
 def gen_uuid():
@@ -72,3 +72,30 @@ class DishIngredient(db.Model):
     product = db.relationship("Product", foreign_keys=[product_id])
     cooking_method = db.relationship("CookingMethod", foreign_keys=[cooking_method_id])
     nested_dish = db.relationship("Dish", foreign_keys=[nested_dish_id])
+
+
+class DailyMeal(db.Model):
+    """Запись о съеденном блюде/продукте за день (дневник питания)."""
+    __tablename__ = "daily_meals"
+    id = db.Column(db.String(36), primary_key=True, default=gen_uuid)
+    user_id = db.Column(db.String(36), db.ForeignKey("users.id"), nullable=False)
+    meal_date = db.Column(db.Date, nullable=False, default=lambda: datetime.now(timezone.utc).date())
+    # meal_type: breakfast / lunch / dinner / snack
+    meal_type = db.Column(db.String(20), nullable=False, default="snack")
+    # Ссылка на блюдо пользователя (опционально)
+    dish_id = db.Column(db.String(36), db.ForeignKey("dishes.id"), nullable=True)
+    # Либо ссылка на продукт (опционально)
+    product_id = db.Column(db.String(36), db.ForeignKey("products.id"), nullable=True)
+    # Вес / кол-во порций. Для dish: порций; для product: вес в граммах (или штуки).
+    amount = db.Column(db.Float, nullable=False, default=1.0)
+    # Кэш КБЖУ на момент добавления (чтобы не пересчитывать каждый раз)
+    calories = db.Column(db.Float, nullable=False, default=0)
+    protein = db.Column(db.Float, nullable=False, default=0)
+    fat = db.Column(db.Float, nullable=False, default=0)
+    carbs = db.Column(db.Float, nullable=False, default=0)
+    # Имя для отображения (на случай если блюдо/продукт удалены)
+    label = db.Column(db.String(200), nullable=True)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+
+    dish = db.relationship("Dish", foreign_keys=[dish_id])
+    product = db.relationship("Product", foreign_keys=[product_id])

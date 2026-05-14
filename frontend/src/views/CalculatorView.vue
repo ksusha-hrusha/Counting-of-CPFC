@@ -1,8 +1,19 @@
 <template>
   <div>
     <h1 class="section-title">Калькулятор КБЖУ</h1>
-    <div class="calc-layout">
-      <!-- Форма -->
+
+    <!-- Переключатель режимов -->
+    <div class="mode-tabs">
+      <button :class="['mode-tab', mode === 'single' && 'active']" @click="switchMode('single')">
+        Продукт
+      </button>
+      <button :class="['mode-tab', mode === 'dish' && 'active']" @click="switchMode('dish')">
+        Блюдо
+      </button>
+    </div>
+
+    <!-- Режим: один ингредиент -->
+    <div v-if="mode === 'single'" class="calc-layout">
       <div class="card">
         <div class="field">
           <label>Продукт</label>
@@ -25,7 +36,6 @@
         </button>
       </div>
 
-      <!-- Результат -->
       <div v-if="result" class="card">
         <h3 style="margin-bottom:14px; color:var(--text-dark);">Результат</h3>
         <NutritionBox :n="result" :label="`на ${result.weight_cooked}г готового`" />
@@ -33,6 +43,14 @@
           <PlusIcon style="width:16px;height:16px;" /> Добавить в блюдо
         </button>
       </div>
+    </div>
+
+    <!-- Режим: целое блюдо -->
+    <div v-if="mode === 'dish'" class="dish-mode card">
+      <p class="dish-hint">Создайте блюдо из нескольких ингредиентов и получите суммарное КБЖУ.</p>
+      <button class="btn btn-primary" style="width:100%;" @click="goNewDish">
+        <PlusIcon style="width:16px;height:16px;" /> Создать блюдо
+      </button>
     </div>
   </div>
 </template>
@@ -49,10 +67,17 @@ import NutritionBox from '@/components/NutritionBox.vue'
 
 const auth = useAuthStore()
 const router = useRouter()
+
+const mode = ref('single')
 const product = ref(null)
 const weight = ref(100)
 const cookingMethodId = ref('')
 const result = ref(null)
+
+function switchMode(m) {
+  mode.value = m
+  result.value = null
+}
 
 function onProduct(p) { product.value = p }
 
@@ -76,13 +101,41 @@ function goCreate() {
     }
   })
 }
+
+function goNewDish() {
+  router.push('/dishes/new')
+}
 </script>
 
 <style scoped>
+.mode-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.mode-tab {
+  flex: 1;
+  padding: 10px 0;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  color: var(--text-dark);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+.mode-tab.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
 .calc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
 @media (max-width: 700px) { .calc-layout { grid-template-columns: 1fr; } }
 .field { margin-bottom: 14px; }
 .field label { display: block; font-size: 13px; color: #555; margin-bottom: 5px; }
 .product-info { display: flex; justify-content: space-between; font-size: 13px; background: var(--bg-soft); border-radius: 6px; padding: 8px 12px; margin-bottom: 14px; }
 .muted { color: #888; }
+.dish-mode { max-width: 480px; }
+.dish-hint { font-size: 14px; color: #666; margin-bottom: 18px; line-height: 1.5; }
 </style>
