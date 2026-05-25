@@ -4,7 +4,7 @@
 
 [Документация / описание проекта](https://docs.google.com/document/d/1OM11w-eVbyQG9DLlLOxwpjPVmSsXTAbtJuQWXhQhjSM/edit?usp=sharing)
 
-[Сайт проекта](https://nutricalc.silaeder.space)
+[Ссылка на сайт проекта](https://nutricalc.silaeder.space)
 
 ## Требования
 
